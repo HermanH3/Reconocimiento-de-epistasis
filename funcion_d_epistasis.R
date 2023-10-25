@@ -3,9 +3,6 @@ epist <- function(fen, alfa = 0.05){  #fen: vector para ingresar los fenotipos o
   
   t <- sum(fen)              #t: suma de los fenotipos ingresados
   
-  p.fen <- (fen/t)        #p.fen: proporción de cada fenotipo
-  #                             ingresado
-  
   fteo1 <- c(9, 3, 4)     
   fteo2 <- c(12, 3, 1)
   fteo3 <- c(9, 7)        #fteo: proporción fenotípica teórica
@@ -13,6 +10,10 @@ epist <- function(fen, alfa = 0.05){  #fen: vector para ingresar los fenotipos o
   fteo5 <- c(13, 3)
   largo <- length(fen)    #preguntando la longitud de los datos  
   
+  if(largo == 1 | largo > 3){   
+    r <- stop("No hay epistasis con datos iguales 
+                  a uno o mayores que tres")
+  }
   if(largo == 3){          #usando la longitud para crear el primer
     #                           condicional
     
@@ -30,9 +31,14 @@ epist <- function(fen, alfa = 0.05){  #fen: vector para ingresar los fenotipos o
     if(X2.2 < X2.crit){
       r  <- "Epistasis simple dominante"
     }else{
+      if(X2.1 < X2.crit){
       r <-  "Epistasis simple recesiva"
+    }else{
+      r <- stop("Corresponde a epistasis pero puede haber un caso 
+                  de ligamiento genético")
     }
-  }else{
+    }  
+    }else{
     esp3 <- (t*fteo3)/16
     esp4 <- (t*fteo4)/16
     esp5 <- (t*fteo5)/16
@@ -49,12 +55,14 @@ epist <- function(fen, alfa = 0.05){  #fen: vector para ingresar los fenotipos o
       if(X2.4 < X2.crit){
         r <-  "Epistasis doble dominante"
       }else{
+        if(X2.5 < X2.crit){
         r <-  "Epistasis doble dominante recesiva"
+        }else{
+        r <- stop("Corresponde a epistasis pero puede haber un caso 
+                  de ligamiento genético") 
+        }  
       }
-      if(largo == 1 | largo >= 4){   
-        r <- stop("No hay epistasis")
-      }
-    }
+   }
   }
   r
 }
